@@ -301,6 +301,7 @@ function setupTimeControls() {
     const speedValue = document.getElementById('speedValue');
     const setSpeedOneButton = document.getElementById('setSpeedOne');
     const reverseButton = document.getElementById('reverse');
+    const timeSlider = document.getElementById('timeSlider');
 
     // Update button icon and title
     function updateButton(button, condition, titleTrue, titleFalse, iconTrue, iconFalse) {
@@ -315,6 +316,20 @@ function setupTimeControls() {
         isPlaying = !isPlaying;
         updateButton(playPauseButton, isPlaying, "Pause", "Play", '<i class="fas fa-pause"></i>', '<i class="fas fa-play"></i>');
     }
+
+
+
+    timeSlider.addEventListener('input', () => {
+        const daysOffset = parseInt(timeSlider.value);
+        const newDate = new Date(J2000_DATE);
+        newDate.setDate(J2000_DATE.getDate() + daysOffset);
+
+        currentDate = new Date(newDate.getTime());
+        updatePositions();  
+        updateDateDisplay(); 
+    });
+
+    timeSlider.value = 0; 
 
     // Toggle reverse and update time acceleration
     function toggleReverse() {
@@ -386,6 +401,8 @@ export function calculateJulianDate(date) {
     return (date.getTime() / 86400000) + 2440587.5;
 }
 
+
+
 export function updateDateDisplay() {
     document.getElementById('currentDateDisplay').textContent = formatDate(currentDate);
     document.getElementById('julianDateDisplay').textContent = `JD: ${calculateJulianDate(currentDate).toFixed(2)}`;
@@ -439,6 +456,9 @@ function animate() {
     
         updateDateDisplay();
         updatePositions();
+
+        const daysOffset = Math.floor((currentDate - J2000_DATE) / (24 * 60 * 60 * 1000));
+        document.getElementById('timeSlider').value = daysOffset;
     }
 
     controls.update();
@@ -496,3 +516,18 @@ function clearTraces() {
 }
 
 init();
+
+
+function setupTimelineSlider() {
+    const timelineSlider = document.getElementById('timelineSlider');
+    const selectedYearDisplay = document.getElementById('selectedYear');
+
+    timelineSlider.addEventListener('input', (event) => {
+        const selectedYear = event.target.value;
+        selectedYearDisplay.textContent = selectedYear;
+
+        currentDate = new Date(Date.UTC(selectedYear, 0, 1, 12, 0, 0));
+        updatePositions();
+        updateDateDisplay(); 
+    });
+}

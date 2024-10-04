@@ -78,6 +78,12 @@ body {
     align-items: center;
 }
 
+#timelineControl{
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+
 #speedSlider {
     width: 100px;
 }
